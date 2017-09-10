@@ -10,6 +10,7 @@ env:
     - VERSION=latest
 
 before_script:
+  - cd src/
   - IMAGE_NAME="chesszebra/$(echo "$TRAVIS_REPO_SLUG" | cut -c 25-):${VERSION}"
 
 script:
