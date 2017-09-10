@@ -1,0 +1,26 @@
+language: bash
+
+services: docker
+
+env:
+  global:
+    - secure: "TE6Q2HqtyKsGOby+Xv+v3MSGCal4O5aA8bVQtUBlPPjxEZYhEXlgS9isU4+sTd0U4pWFuvc2Y8fQrdNLancYEkoDahEUFj1d3qCiqv8V4RqJYU/Fc8o/jKAAlzGYqOBuZgnhR0255xFX9uUqONw2vnevfKx1VOScDvo9/wbbHTVrJk4H7HSGa97MvBF/QIm+lm6BXmLACPaSE6Vf/mwSSJJ9QNHQgFAPNOShX0YIo7KcOSBk9FBIgZAp2snbgFcfkc/zIKrV5DU4sDL3Fy4r3Hz4mUT7uXSk2TWi5O5VYD+MxZOXG5uFBhzp35VFqQqgH01cSZVxdn6BdDwr1FwSlVfuJnjsK6wwo2YZb8QhxMN/DDkerhmDkNRkIJ1ZozKyxSJVHctKt/QDNxJGznoANs5OmqXvfYTc0bl4K4KStto+WmTZ3Xv7auvVl43jQF36PjXa7S7OYUi6tn7xJqJnTs58p3TSzI/gkar4X8r5rPZdIVVxmT0mNijccae5HrCyJ9mZ9xKCqdahmaoLLpn/6FSJn5dSQktZKZ42qQMZctvTEIt9Z1v++o3ZATk8wHhpJnMkNdo7rpM8DB/Wbo4+sjoSE2Yo5uskcWc5t655gO5iLLiOREy5uz6aoVLlpKscDOfRUnwwgtrZUhjygvK2UejmyB73YFRS9QPcdqossiE="
+    - secure: "UoMYEwnWEEs3Mr4xEFX6KH5lZzZAQciaik8adBB+5JD6tkAwN3voFCGy+4ZtNU4oKdKLaWRKYKyI6vsN+DT3q9d6eahBeKCoVxLDFGfp13u0Nrnkp0U9i52LedeBOpsXN2nlJHfbM9mro00q2odbqKIMl/5fGU4Biia/wNGBI9jAsoxG7F9tJ0dMVmknMS/ZEDOo9oTwW013+upxIErGlI3gradP5FP92DyMczkXV/32eBQ0k6gfLNKIatrVw+YqtlPYqedBErm9LL6Y2t5Ox9+f/fVwI/J6bFlIM46anm6nEGvJEvyM4zmban/EItkTSbpyNhSyTdfhxieoWGKJz3EaZeFhQ3/JE/wvvdtBn7Wt60RFN2EC1Yf2mE3mjKpbgwBq9ttW+6MEtAD/xPKUmO5THcDnMn5DyQJBJcRiIk9pliPK3G4fnOha10dO5ft/Ajn5hBepgHdr7YMnYAYmCD2iW0IU+CU444sEuR2ai3olOC8K6pz95kFZHGGe7eU83N17Js7pIs7ix7rxvL4/Y1G/jy6vhLmyylD/0Kt1NXFsnIGS7KNjGZas+uZI/WRVYC0QPWHsW+WEL6nO6iGc/ch5uKnhwNlpZDH4dt/QHeMH6e0oP32qbWY/ZYrxLa1ukG779zC1iecsrbzDgEL3vpY6hFzhVeQag8iwcu0nVMo="
+  matrix:
+    - VERSION=latest
+
+before_script:
+  - IMAGE_NAME="chesszebra/$(echo "$TRAVIS_REPO_SLUG" | cut -c 25-):${VERSION}"
+
+script:
+  - docker build -t "$IMAGE_NAME" .
+
+after_success:
+  - docker login --username $DOCKER_USER --password $DOCKER_PASS
+  - docker push $IMAGE_NAME
+
+after_script:
+  - docker images
+
+notifications:
+  email: false
